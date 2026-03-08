@@ -1,0 +1,61 @@
+body {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  font-family: Arial, sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  margin: 0;
+}
+.game {
+  text-align: center;
+}
+.title {
+  color: #fff;
+  font-size: 2em;
+  margin-bottom: 20px;
+}
+.buttons {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+  max-width: 300px;
+  margin: 0 auto;
+}
+.button {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  border: none;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+.button:hover {
+  transform: scale(1.1);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4);
+}
+.red {
+  background: linear-gradient(45deg, #ff6b6b, #ee5a24);
+}
+.blue {
+  background: linear-gradient(45deg, #4ecdc4, #44a08d);
+}
+.green {
+  background: linear-gradient(45deg, #45b7d1, #96ceb4);
+}
+.yellow {
+  background: linear-gradient(45deg, #feca57, #ff9ff3);
+}
+.controls {
+  margin-top: 20px;
+}
+button {
+  background: #333;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  margin: 0 10px;
+  cursor: pointer;
+  border-radius: 5px;
+}
