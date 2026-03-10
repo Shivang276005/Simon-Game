@@ -51,6 +51,8 @@ body{
 }
 .color-pad:active{
   transform:scale(0.95);
+  filter:brightness(2);
+  transition: all ease-in-out;
 }
 .green{
   background:linear-gradient(135deg,#00c853,#69f0ae);
@@ -108,5 +110,6 @@ body{
 }
 .flash{
   filter:brightness(2);
-  transform:scale(1.05);
+  transform:scale(0.95);
+  transition: all ease-in-out;
 }
