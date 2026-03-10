@@ -17,6 +17,10 @@ startBtnElement.addEventListener('click',()=>{
   playerMove = [];
 });
 resetBtnElement.addEventListener('click',()=>{
+  level = 0;
+  count = 0;
+  computerMove = [];
+  playerMove = [];
   clearInterval(intervalId);
 });
 
@@ -49,21 +53,17 @@ function flashSequence(){
   count = 0;
 }
 
-function getPlayerMove(){
-  greenElement.addEventListener('click',()=>{
-    playerMove.push('green');    
-    console.log(playerMove);
+// function getPlayerMove(){
+  const container = document.querySelector('.game-board');
+  const nestedContainer = document.querySelectorAll('.game-board button');
+  nestedContainer.forEach(btn => {
+    btn.addEventListener('click', (event)=>{
+      // console.log('Button clicked : ', event.target.innerText);
+      playerMove.push((event.target.innerText).toLowerCase());
+    });
   });
-  redElement.addEventListener('click',()=>{
-    playerMove.push('red');    
-    console.log(playerMove);
-  });
-  yellowElement.addEventListener('click',()=>{
-    playerMove.push('yellow');    
-    console.log(playerMove);
-  });
-  blueElement.addEventListener('click',()=>{
-    playerMove.push('blue');    
-    console.log(playerMove);
-  });
+// }
+function checkResult(){
+  return (computerMove.length === playerMove.length &&
+  computerMove.every((value, index) => value === playerMove[index]));
 }
