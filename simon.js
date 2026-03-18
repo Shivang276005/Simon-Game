@@ -1,8 +1,10 @@
 let level = 0;
 let count = 0;
+let score = 0;
 let computerMove = [];
 let playerMove = [];
 let intervalId;
+let gameOn = false;
 
 let startBtnElement = document.getElementById('startBtn');
 let resetBtnElement = document.getElementById('resetBtn');
@@ -13,12 +15,14 @@ let blueElement = document.getElementById('blue');
 let yellowElement = document.getElementById('yellow');
 
 startBtnElement.addEventListener('click',()=>{
+  gameOn = true;
   generateMove();
   playerMove = [];
 });
 resetBtnElement.addEventListener('click',()=>{
   level = 0;
   count = 0;
+  score = 0;
   computerMove = [];
   playerMove = [];
   clearInterval(intervalId);
@@ -64,6 +68,24 @@ function flashSequence(){
   });
 // }
 function checkResult(){
-  return (computerMove.length === playerMove.length &&
+  let result = (computerMove.length === playerMove.length &&
   computerMove.every((value, index) => value === playerMove[index]));
+  if (result) {
+    scoreEvalution();
+  }else{
+    console.log('Koi na try again....');
+  }
+}
+function scoreEvalution(){
+  if (level<=5) {
+    score+=10;
+  } else if(level>5 && level<=15) {
+    score+=50;
+  }else if(level>15 && level<=25) {
+    score+=150;
+  }else{
+    score+=500;
+  }
+  document.getElementById('score').innerText = score;
+  console.log(score);
 }
