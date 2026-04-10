@@ -135,3 +135,17 @@ function gameReset(){
   document.getElementById('level').innerText = level;
   document.getElementById('score').innerText = score;
 }
+
+const audio = document.getElementById("bgMusic");
+const btn = document.getElementById("audioBtn");
+const icon = document.getElementById("audioIcon");
+
+btn.addEventListener("click", () => {
+  if (audio.paused) {
+    audio.play();
+    icon.src = "assets/musicOn.jpg";
+  } else {
+    audio.pause();
+    icon.src = "assets/musicOFF.jpg";
+  }
+});

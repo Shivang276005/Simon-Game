@@ -114,8 +114,33 @@ body{
     font-size:1rem;
   }
 }
+
 .flash{
   filter:brightness(2);
   transform:scale(0.95);
   transition: all ease-in-out;
+}
+
+
+.audio-control {
+  position: fixed;
+  top: 15px;
+  right: 15px;
+  z-index: 1000;
+}
+#audioBtn {
+  background: rgba(0, 0, 0, 0.6);
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+#audioBtn:hover {
+  transform: scale(1.1);
+  background: rgba(0, 0, 0, 0.8);
+}
+#audioIcon {
+  width: 30px;
+  height: 30px;
+  display: block;
 }
