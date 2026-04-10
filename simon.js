@@ -118,6 +118,13 @@ function renderMsg(msg){
 }
 
 function gameOver(){
+  gameOn = false;
+  colorSequence = [];
+  playerMove = [];
+  level = 1;
+  score = 0;
+  document.getElementById('level').innerText = level;
+  document.getElementById('score').innerText = score;
   document.getElementById('status')
     .innerHTML = "Wrong input - Game Over";
   setTimeout(() => {
