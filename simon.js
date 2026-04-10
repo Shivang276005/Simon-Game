@@ -79,10 +79,10 @@ function validateInput(){
   let currentIndex = playerMove.length - 1;
 
   if (playerMove[currentIndex] === colorSequence[currentIndex]) {
-    // renderMsg("Correct");
-
+    
     if (playerMove.length === colorSequence.length) {
       renderMsg("Level Complete");
+      document.getElementById('levelComplete').play();
       scoreEvalution(level++);
       playerMove = [];
       genSequence();
@@ -127,10 +127,11 @@ function gameOver(){
   document.getElementById('score').innerText = score;
   document.getElementById('status')
     .innerHTML = "Wrong input - Game Over";
+  document.getElementById('gameOver').play();
   setTimeout(() => {
     document.getElementById('status')
     .innerHTML = "Click Start to Play Again";
-  }, 1500);
+  }, 2000);
 }
 
 function gameReset(){
@@ -150,9 +151,10 @@ const icon = document.getElementById("audioIcon");
 btn.addEventListener("click", () => {
   if (audio.paused) {
     audio.play();
-    icon.src = "assets/musicOn.jpg";
+    audio.loop = true;
+    icon.src = "assets/musicOn.png";
   } else {
     audio.pause();
-    icon.src = "assets/musicOFF.jpg";
+    icon.src = "assets/musicOFF.png";
   }
 });
