@@ -1,11 +1,48 @@
 <html>
-  <body>    
-    <div class="game-board">
-      <button class="color-pad green" id="green">Green</button>
-      <button class="color-pad red" id="red">Red</button>
-      <button class="color-pad blue" id="blue">Blue</button>
-      <button class="color-pad yellow" id="yellow">Yellow</button>
+  <head>
+    <style>
+      /* Background overlay */
+      .modal-overlay {
+        display: none; /* Hidden by default */
+        position: fixed;
+        top: 0; left: 0;
+        width: 100%; height: 100%;
+        background: rgba(0, 0, 0, 0.6); /* Semi-transparent black */
+        z-index: 1000;
+        justify-content: center;
+        align-items: center;
+      }
+
+      /* Modal box itself */
+      .modal-box {
+        background: white;
+        padding: 20px;
+        border-radius: 8px;
+        max-width: 400px;
+        position: relative;
+      }
+
+      /* Close button style */
+      .close-btn {
+        position: absolute;
+        top: 10px; right: 15px;
+        cursor: pointer;
+        font-size: 24px;
+      }
+
+    </style>
+  </head>
+  <body style="background-color: darkslategray;">    
+    <button id="openModal">Open Modal</button>
+
+    <div id="modalOverlay" class="modal-overlay">
+      <div class="modal-box">
+        <span id="closeModal" class="close-btn">&times;</span>
+        <h2>Game Over!!!</h2>
+        <p>Click Start to play again</p>
+      </div>
     </div>
+
   <script src="rough.js"></script>
   </body>
 </html>

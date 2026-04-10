@@ -81,11 +81,11 @@ body{
   transition:0.2s;
 }
 .start-btn{
-  background:linear-gradient(135deg,#00c853,#69f0ae);
+  background:linear-gradient(135deg,#018a3a,#4fc78d);
   color:white;
 }
 .reset-btn{
-  background:linear-gradient(135deg,#ff5252,#ff867c);
+  background:linear-gradient(135deg,#c93535,#be5d54);
   color:white;
 }
 .btn:hover{
@@ -96,7 +96,13 @@ body{
   color:white;
   font-size:0.95rem;
   opacity:0.9;
+  padding-bottom: 1rem;
 }
+#score , #level{
+  font-size: 1.5rem;
+  color: #fff176;
+}
+
 @media (max-width:500px){
   .title{
     font-size:2rem;

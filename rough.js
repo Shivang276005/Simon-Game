@@ -1,23 +1,20 @@
-let level = 3;
-let computerMove = [];
-for (let i = 0; i < level; i++) {
-  let randNum = Math.random();
-  if (randNum <= 1/4) {
-    computerMove.push('green');
-  } else if(randNum > 1/4 && randNum <= 1/2){
-    computerMove.push('red');
-  } else if(randNum > 1/2 && randNum <= 3/4){
-    computerMove.push('yellow');
-  } else{
-    computerMove.push('blue');
+const openBtn = document.getElementById('openModal');
+const closeBtn = document.getElementById('closeModal');
+const modal = document.getElementById('modalOverlay');
+
+// Open modal
+openBtn.addEventListener('click', () => {
+  modal.style.display = 'flex';
+});
+
+// Close modal
+closeBtn.addEventListener('click', () => {
+  modal.style.display = 'none';
+});
+
+// Close modal if user clicks outside the modal box
+window.addEventListener('click', (event) => {
+  if (event.target === modal) {
+    modal.style.display = 'none';
   }
-}
-function flash(){
-  index = 1;
-  let intervalId = setInterval(() => {
-    
-    if (index > level) {
-      clearInterval(intervalId);    
-    }
-  }, 1000);
-}
+});

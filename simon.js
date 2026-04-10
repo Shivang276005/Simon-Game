@@ -1,10 +1,9 @@
-let level = 0;
-let count = 0;
-let score = 0;
-let computerMove = [];
-let playerMove = [];
-let intervalId;
 let gameOn = false;
+let colorSequence = [];
+let playerMove = [];
+let level = 1;
+let score = 0;
+let intervalId;
 
 let startBtnElement = document.getElementById('startBtn');
 let resetBtnElement = document.getElementById('resetBtn');
@@ -14,69 +13,88 @@ let redElement = document.getElementById('red');
 let blueElement = document.getElementById('blue');
 let yellowElement = document.getElementById('yellow');
 
+let levelElement = document.getElementById('level');
+let scoreElement = document.getElementById('score');
+
+
 startBtnElement.addEventListener('click',()=>{
-  gameOn = true;
-  generateMove();
-  playerMove = [];
+  startGame();
 });
 resetBtnElement.addEventListener('click',()=>{
-  level = 0;
-  count = 0;
-  score = 0;
-  computerMove = [];
-  playerMove = [];
-  clearInterval(intervalId);
+  gameReset();
 });
 
-function generateMove(){
+
+function startGame(){
+  gameOn = true;
+  genSequence();
+
+}
+
+function genSequence(){
   let randNum = Math.random();
   if (randNum <= 0.25) {
-    computerMove.push('green');
+    colorSequence.push('green');
   } else if(randNum > 0.25 && randNum <= 0.5){
-    computerMove.push('red');
+    colorSequence.push('red');
   } else if(randNum > 0.5 && randNum <= 0.75){
-    computerMove.push('yellow');
+    colorSequence.push('yellow');
   } else{
-    computerMove.push('blue');
+    colorSequence.push('blue');
   }
   flashSequence();
 }
+
 function flashSequence(){
-  intervalId = setInterval(() => { 
-    let element = computerMove[count];
-    count++;
-    if (count >= computerMove.length) {
+  let index = 0;
+  const intervalId = setInterval(()=>{
+    if (index < colorSequence.length) {
+      flashElement(colorSequence[index++]);
+    }else{
       clearInterval(intervalId);
     }
-    document.getElementById(`${element}`).classList.add('flash');
-    setTimeout(() => {
-      document.getElementById(`${element}`).classList.remove('flash');
-    }, 400);
   }, 1000);
-  document.getElementById('level').innerText = (count+1);
-  count = 0;
 }
 
-// function getPlayerMove(){
-  const container = document.querySelector('.game-board');
-  const nestedContainer = document.querySelectorAll('.game-board button');
-  nestedContainer.forEach(btn => {
-    btn.addEventListener('click', (event)=>{
-      // console.log('Button clicked : ', event.target.innerText);
-      playerMove.push((event.target.innerText).toLowerCase());
-    });
-  });
-// }
-function checkResult(){
-  let result = (computerMove.length === playerMove.length &&
-  computerMove.every((value, index) => value === playerMove[index]));
-  if (result) {
-    scoreEvalution();
-  }else{
-    console.log('Koi na try again....');
-  }
+function flashElement(element){
+  document.getElementById(`${element}`).classList.add('flash');
+  setTimeout(() => {
+    document.getElementById(`${element}`).classList.remove('flash');
+  }, 400);
 }
-function scoreEvalution(){
+
+playerInput();
+
+function playerInput(){
+  let input;
+  const btnContainer = document.querySelector('.game-board');
+  btnContainer.addEventListener('click',(e)=>{
+    input = e.target.innerText.toLowerCase();
+    playerMove.push(input);
+    validateInput();
+  });
+}
+
+function validateInput(){
+  let currentIndex = playerMove.length - 1;
+
+  if (playerMove[currentIndex] === colorSequence[currentIndex]) {
+    // renderMsg("Correct");
+
+    if (playerMove.length === colorSequence.length) {
+      renderMsg("Level Complete");
+      scoreEvalution(level++);
+      playerMove = [];
+      genSequence();
+    }
+
+  } else {
+    gameOver();
+    playerMove = [];
+  }   
+}
+
+function scoreEvalution(level){
   if (level<=5) {
     score+=10;
   } else if(level>5 && level<=15) {
@@ -86,6 +104,34 @@ function scoreEvalution(){
   }else{
     score+=500;
   }
+  document.getElementById('level').innerText = level+1;
   document.getElementById('score').innerText = score;
-  console.log(score);
+}
+
+function renderMsg(msg){
+  document.getElementById('status')
+  .innerHTML = msg;
+  setTimeout(() => {
+    document.getElementById('status')
+    .innerHTML = "Keep going...";
+  }, 900);
+}
+
+function gameOver(){
+  document.getElementById('status')
+    .innerHTML = "Wrong input - Game Over";
+  setTimeout(() => {
+    document.getElementById('status')
+    .innerHTML = "Click Start to Play Again";
+  }, 1500);
+}
+
+function gameReset(){
+  gameOn = false;
+  colorSequence = [];
+  playerMove = [];
+  level = 1;
+  score = 0;
+  document.getElementById('level').innerText = level;
+  document.getElementById('score').innerText = score;
 }
