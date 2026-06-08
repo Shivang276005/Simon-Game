@@ -3,158 +3,256 @@ let colorSequence = [];
 let playerMove = [];
 let level = 1;
 let score = 0;
-let intervalId;
+let acceptingInput = false;
 
-let startBtnElement = document.getElementById('startBtn');
-let resetBtnElement = document.getElementById('resetBtn');
+const colors = ["green", "red", "yellow", "blue"];
 
-let greenElement = document.getElementById('green');
-let redElement = document.getElementById('red');
-let blueElement = document.getElementById('blue');
-let yellowElement = document.getElementById('yellow');
+// DOM ELEMENTS
+const startBtn = document.getElementById("startBtn");
+const resetBtn = document.getElementById("resetBtn");
 
-let levelElement = document.getElementById('level');
-let scoreElement = document.getElementById('score');
+const levelElement = document.getElementById("level");
+const scoreElement = document.getElementById("score");
+const statusElement = document.getElementById("status");
 
+const gameBoard = document.querySelector(".game-board");
 
-startBtnElement.addEventListener('click',()=>{
-  startGame();
-});
-resetBtnElement.addEventListener('click',()=>{
-  gameReset();
-});
+const bgMusic = document.getElementById("bgMusic");
+const audioBtn = document.getElementById("audioBtn");
+const audioIcon = document.getElementById("audioIcon");
 
+const levelCompleteSound = document.getElementById("levelComplete");
+const gameOverSound = document.getElementById("gameOver");
 
-function startGame(){
+// EVENT LISTENERS
+startBtn.addEventListener("click", startGame);
+resetBtn.addEventListener("click", gameReset);
+gameBoard.addEventListener("click", handlePlayerInput);
+audioBtn.addEventListener("click", toggleMusic);
+
+// GAME START
+function startGame() {
+  if (gameOn) return;
+
   gameOn = true;
+  acceptingInput = false;
+
+  colorSequence = [];
+  playerMove = [];
+
+  level = 1;
+  score = 0;
+
+  levelElement.innerText = level;
+  scoreElement.innerText = score;
+
+  renderMsg("Watch the sequence");
   genSequence();
-
 }
 
-function genSequence(){
-  let randNum = Math.random();
-  if (randNum <= 0.25) {
-    colorSequence.push('green');
-  } else if(randNum > 0.25 && randNum <= 0.5){
-    colorSequence.push('red');
-  } else if(randNum > 0.5 && randNum <= 0.75){
-    colorSequence.push('yellow');
-  } else{
-    colorSequence.push('blue');
-  }
-  flashSequence();
-}
+// GENERATE NEXT COLOR
+function genSequence() {
 
-function flashSequence(){
-  let index = 0;
-  const intervalId = setInterval(()=>{
-    if (index < colorSequence.length) {
-      flashElement(colorSequence[index++]);
-    }else{
-      clearInterval(intervalId);
-    }
-  }, 1000);
-}
+  const randomColor = colors[Math.floor(Math.random() * colors.length)];
 
-function flashElement(element){
-  document.getElementById(`${element}`).classList.add('flash');
+  colorSequence.push(randomColor);
+
   setTimeout(() => {
-    document.getElementById(`${element}`).classList.remove('flash');
-  }, 400);
+    flashSequence();
+  }, 500);
 }
 
-playerInput();
+// SHOW COMPLETE SEQUENCE
 
-function playerInput(){
-  let input;
-  const btnContainer = document.querySelector('.game-board');
-  btnContainer.addEventListener('click',(e)=>{
-    input = e.target.innerText.toLowerCase();
-    playerMove.push(input);
-    validateInput();
-  });
-}
-
-function validateInput(){
-  let currentIndex = playerMove.length - 1;
-
-  if (playerMove[currentIndex] === colorSequence[currentIndex]) {
+function flashSequence() {
     
-    if (playerMove.length === colorSequence.length) {
-      renderMsg("Level Complete");
-      document.getElementById('levelComplete').play();
-      scoreEvalution(level++);
+  acceptingInput = false;
+  let index = 0;
+
+  const interval = setInterval(() => {
+
+  if (index < colorSequence.length) {
+    flashElement(colorSequence[index]);
+    index++;
+  } else {
+
+      clearInterval(interval);
+
       playerMove = [];
-      genSequence();
+
+      acceptingInput = true;
+
+      renderMsg("Your turn");
+  }
+
+}, 800);
+}
+
+// FLASH COLOR BUTTON
+
+function flashElement(color) {
+
+    const element = document.getElementById(color);
+
+    if (!element) return;
+
+    element.classList.add("flash");
+
+    setTimeout(() => {
+        element.classList.remove("flash");
+    }, 400);
+}
+
+// HANDLE PLAYER CLICK
+
+function handlePlayerInput(e) {
+
+    if (!gameOn || !acceptingInput) return;
+
+    const color = e.target.dataset.color;
+
+    if (!color) return;
+
+    flashElement(color);
+
+    playerMove.push(color);
+
+    validateInput();
+}
+
+// VALIDATE PLAYER MOVE
+
+function validateInput() {
+
+    const currentIndex = playerMove.length - 1;
+
+    if (playerMove[currentIndex] !== colorSequence[currentIndex]) {
+
+        gameOver();
+        return;
     }
 
-  } else {
-    gameOver();
+    if (playerMove.length === colorSequence.length) {
+
+        acceptingInput = false;
+
+        renderMsg("Level Complete");
+
+        if (levelCompleteSound) {
+            levelCompleteSound.currentTime = 0;
+            levelCompleteSound.play();
+        }
+
+        level++;
+
+        updateScore();
+
+        setTimeout(() => {
+            genSequence();
+        }, 1200);
+    }
+}
+
+// SCORE CALCULATION
+
+function updateScore() {
+
+    if (level <= 5) {
+
+        score += 10;
+
+    } else if (level <= 15) {
+
+        score += 50;
+
+    } else if (level <= 25) {
+
+        score += 150;
+
+    } else {
+
+        score += 500;
+    }
+
+    levelElement.innerText = level;
+    scoreElement.innerText = score;
+}
+
+// STATUS MESSAGE
+
+function renderMsg(message) {
+
+    statusElement.innerHTML = message;
+}
+
+// GAME OVER
+
+function gameOver() {
+
+    gameOn = false;
+    acceptingInput = false;
+
+    if (gameOverSound) {
+        gameOverSound.currentTime = 0;
+        gameOverSound.play();
+    }
+
+    renderMsg("Wrong Input - Game Over");
+
+    setTimeout(() => {
+        renderMsg("Click Start to Play Again");
+    }, 2000);
+
+    colorSequence = [];
     playerMove = [];
-  }   
+
+    level = 1;
+    score = 0;
+
+    levelElement.innerText = level;
+    scoreElement.innerText = score;
 }
 
-function scoreEvalution(level){
-  if (level<=5) {
-    score+=10;
-  } else if(level>5 && level<=15) {
-    score+=50;
-  }else if(level>15 && level<=25) {
-    score+=150;
-  }else{
-    score+=500;
-  }
-  document.getElementById('level').innerText = level+1;
-  document.getElementById('score').innerText = score;
+// RESET GAME
+
+function gameReset() {
+
+    gameOn = false;
+    acceptingInput = false;
+
+    colorSequence = [];
+    playerMove = [];
+
+    level = 1;
+    score = 0;
+
+    levelElement.innerText = level;
+    scoreElement.innerText = score;
+
+    renderMsg("Click Start to Begin");
 }
 
-function renderMsg(msg){
-  document.getElementById('status')
-  .innerHTML = msg;
-  setTimeout(() => {
-    document.getElementById('status')
-    .innerHTML = "Keep going...";
-  }, 900);
+// BACKGROUND MUSIC
+
+function toggleMusic() {
+
+    if (!bgMusic) return;
+
+    if (bgMusic.paused) {
+
+        bgMusic.play();
+        bgMusic.loop = true;
+
+        if (audioIcon) {
+            audioIcon.src = "assets/musicOn.png";
+        }
+
+    } else {
+
+        bgMusic.pause();
+
+        if (audioIcon) {
+            audioIcon.src = "assets/musicOFF.png";
+        }
+    }
 }
-
-function gameOver(){
-  gameOn = false;
-  colorSequence = [];
-  playerMove = [];
-  level = 1;
-  score = 0;
-  document.getElementById('level').innerText = level;
-  document.getElementById('score').innerText = score;
-  document.getElementById('status')
-    .innerHTML = "Wrong input - Game Over";
-  document.getElementById('gameOver').play();
-  setTimeout(() => {
-    document.getElementById('status')
-    .innerHTML = "Click Start to Play Again";
-  }, 2000);
-}
-
-function gameReset(){
-  gameOn = false;
-  colorSequence = [];
-  playerMove = [];
-  level = 1;
-  score = 0;
-  document.getElementById('level').innerText = level;
-  document.getElementById('score').innerText = score;
-}
-
-const audio = document.getElementById("bgMusic");
-const btn = document.getElementById("audioBtn");
-const icon = document.getElementById("audioIcon");
-
-btn.addEventListener("click", () => {
-  if (audio.paused) {
-    audio.play();
-    audio.loop = true;
-    icon.src = "assets/musicOn.png";
-  } else {
-    audio.pause();
-    icon.src = "assets/musicOFF.png";
-  }
-});
